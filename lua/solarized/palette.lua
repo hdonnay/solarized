@@ -108,13 +108,6 @@ function M.sp(n)
   return 'guisp=' .. (palette[n] or 'NONE')
 end
 
-function M.text(n)
-  if not n then
-    n = 'text'
-  else
-    n = 'text_' .. n
-  end
-  return n
-end
-
-return M
+return setmetatable(M, {
+  __index = palette,
+})

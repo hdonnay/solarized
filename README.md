@@ -18,7 +18,22 @@ The theme `solarized` should be available for use with `:colorscheme`.
 
 ## Configuration
 
-None, currently.
+To configure the color scheme, it must be loaded manually or a derivative color
+scheme created. For example, given this lua file:
+
+```lua
+-- ~/.config/nvim/colors/my-solarized.lua
+vim.cmd.packadd('solarized')
+require('solarized').init {
+  force_sync = false,
+  disable_format = { 'bold', 'italic' },
+}
+```
+
+Then `:colorscheme my-solarized` would load the color scheme without bold and
+italic formatting attributes.
+
+See the annotations in the lua for the valid configuraiton options.
 
 ## Choices
 

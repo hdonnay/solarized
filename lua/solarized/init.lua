@@ -68,9 +68,22 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 
 local M = {}
 
+---@class (exact) Options
+---@field force_sync boolean? Force all the "async" highlighting to be loaded before returning.
+---@field disable_format FmtAttr[]? Disable use of specific kinds of formatting.
+
 ---Init initializes the theme.
----@param force_sync boolean? Force all the "async" highlighting to be loaded before returning.
-function M.init(force_sync)
+---@param opts Options? Initialization options.
+function M.init(opts)
+  if not opts then
+    opts = {}
+  end
+
+  if opts.disable_format then
+    local fmt = require('solarized.fmt')
+    fmt:disable(table.unpack(opts.disable_format))
+  end
+
   vim.opt.termguicolors = false
   if vim.fn.exists('syntax_on') == 1 then
     vim.cmd('syntax reset')
@@ -78,10 +91,11 @@ function M.init(force_sync)
   vim.cmd('highlight clear')
   load_mods(false)
 
-  if force_sync then
+  if opts.force_sync then
     load_mods(true)
   else
     local async
+    ---@diagnostic disable-next-line: undefined-field
     async = vim.loop.new_async(vim.schedule_wrap(function()
       load_mods(true)
       async:close()

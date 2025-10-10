@@ -81,7 +81,15 @@ function M.init(opts)
 
   if opts.disable_format then
     local fmt = require('solarized.fmt')
-    fmt:disable(table.unpack(opts.disable_format))
+    local unpacked
+    --- Compatibility with lua 5.1 and older (which doesn't have table.unpack()
+    --- but has unpack())
+    if not table.unpack then
+        unpackad = unpack(opts.disable_format)
+    else
+        unpacked = table.unpack(opts.disable_format)
+    end
+    fmt:disable(unpack(opts.disable_format))
   end
 
   vim.opt.termguicolors = false
